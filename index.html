@@ -18,73 +18,67 @@
   </style>
 </head>
 <body>
+  <script type="text/x-handlebars" data-template-name="application">
     <header>
       <h1>Web-Frontend Coding Contest</h1>
     </header>
+    {{outlet}}
+  </script>
+  <script type="text/x-handlebars" data-template-name="runSessions">
     <table class="table table-hover">
-    <caption>Runners List</caption>
-    <tr>
-      <th><a href="#">#</a></th>
-      <th><a href="#">Start Time<i class="glyphicon glyphicon-chevron-down"></i></a></th>
-      <th><a href="#">End Time</a></th>
-      <th><a href="#">Duration</a></th>
-      <th><a href="#">Distance</a></th>
-      <th><a href="#">Sport Type Id</a></th>
-      <th><a href="#">Has Map</a></th>
-    </tr>
-    <tr tabindex="0">
-        <td>9070242</td>
-        <td>23.02.2012, 12:13</td>
-        <td>23.02.2012, 13:00</td>
-        <td>47,45 min</td>
-        <td>7,83 km</td>
-        <td>1</td>
-        <td>Yes</td>
-    </tr>
-    <tr tabindex="0">
-        <td>9070242</td>
-        <td>23.02.2012, 12:13</td>
-        <td>23.02.2012, 13:00</td>
-        <td>47,45 min</td>
-        <td>7,83 km</td>
-        <td>1</td>
-        <td>Yes</td>
-    </tr>
-    <tr tabindex="0">
-        <td>9070242</td>
-        <td>23.02.2012, 12:13</td>
-        <td>23.02.2012, 13:00</td>
-        <td>47,45 min</td>
-        <td>7,83 km</td>
-        <td>1</td>
-        <td>Yes</td>
-    </tr>
-  </table>
-  <div class="text-center">
-    <ul class="pagination">
-      <li><a href="#">&laquo;</a></li>
-      <li><a href="#">&raquo;</a></li>
-      <li><p>Page 1/99589</p></li>
-    </ul>
-  </div>
-  <table class="table">
-    <caption>Run</caption>
-    <tr>
-      <th><a href="#">#</a></th>
-      <th><a href="#">Start Time</a></th>
-      <th><a href="#">End Time</a></th>
-      <th><a href="#">Duration</a></th>
-      <th><a href="#">Distance</a></th>
-      <th><a href="#">Sport Type Id</a></th>
-    </tr>
-    <tr tabindex="0">
-        <td>9070242</td>
-        <td>23.02.2012, 12:13</td>
-        <td>23.02.2012, 13:00</td>
-        <td>47,45 min</td>
-        <td>7,83 km</td>
-        <td>1</td>
-    </tr>
-  </table>
+      <caption>Runners List</caption>
+      <tr>
+        {{#each tableColumns}}
+          <th><a href="#" {{action "sortBy" attr}}>{{name}}{{#if isSorted}}<i {{bind-attr class="sortClass"}}></i>{{/if}}</a></th>
+        {{/each}}
+      </tr>
+      {{#each sortedRunSessions}}
+        <tr tabindex="0">
+            <td>{{id}}</td>
+            <td>{{start_time}}</td>
+            <td>{{end_time}}</td>
+            <td>{{duration}}</td>
+            <td>{{distance}}</td>
+            <td>{{sport_type_id}}</td>
+            <td>{{encoded_trace}}</td>
+        </tr>
+      {{/each}}
+    </table>
+    <div class="text-center">
+      <ul class="pagination">
+        <li><a href="#">&laquo;</a></li>
+        <li><a href="#">&raquo;</a></li>
+        <li><p>Page 1/99589</p></li>
+      </ul>
+    </div>
+  </script>
+  <script type="text/x-handlebars" data-template-name="runSession">
+    <table class="table">
+      <caption>Run</caption>
+      <tr>
+        <th><a href="#">#</a></th>
+        <th><a href="#">Start Time</a></th>
+        <th><a href="#">End Time</a></th>
+        <th><a href="#">Duration</a></th>
+        <th><a href="#">Distance</a></th>
+        <th><a href="#">Sport Type Id</a></th>
+      </tr>
+      <tr tabindex="0">
+          <td>9070242</td>
+          <td>23.02.2012, 12:13</td>
+          <td>23.02.2012, 13:00</td>
+          <td>47,45 min</td>
+          <td>7,83 km</td>
+          <td>1</td>
+      </tr>
+    </table>
+  </script>
+  <script src="js/libs/jquery-1.10.2.js"></script>
+  <script src="js/libs/handlebars-1.1.2.js"></script>
+  <script src="js/libs/ember-1.6.1.js"></script>
+  <script src="js/libs/ember-data-1.0.0-b8.js"></script>
+  <script src="js/application.js"></script>
+  <script src="js/models/runsession.js"></script>
+  <script src="js/controllers/controller_runsessions.js"></script>
 </body>
 </html>
