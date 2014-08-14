@@ -31,6 +31,9 @@ ContestApp.RunSessionsController = Ember.ArrayController.extend({
         sortBy: sortProperty,
         order: sortOrder || (this.get("clientSort").order === "desc" ? "asc" : "desc")
       });
+    },
+    showRunDetails: function (run) {
+      this.transitionToRoute('runSession', run);
     }
   },
 

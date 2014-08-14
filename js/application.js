@@ -10,6 +10,7 @@ ContestApp.ApplicationAdapter = DS.RESTAdapter.extend({
 // Routes
 ContestApp.Router.map(function () {
   this.resource("runSessions", { path: "/runs" });
+  this.resource('runSession', { path: '/run/:runSession_id' });
 });
 
 ContestApp.IndexRoute = Ember.Route.extend({
