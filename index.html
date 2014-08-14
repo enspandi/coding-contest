@@ -4,12 +4,13 @@
   <title>Coding Contest</title>
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
   <style type="text/css">
-    table caption {
-      font-size:1.2em;
-      font-weight:bold;
-      padding:0.2em;
-      text-align:left;
-    }
+    header h1 { padding: 0 15px; }
+    nav .caption h3 { margin: 5px 0; }
+    nav .control { text-align: right; }
+    nav .control select { display:inline-block; width: auto; }
+    footer .col-md-6 { text-align: right; }
+    footer .col-md-6 .pagination { margin: 0; }
+    footer .col-md-6 .pagination-info { line-height: 2em; }
     table th, td { text-align: center; }
     table tr:focus { background-color: #ccc; outline:0; }
     table tr:hover { cursor:pointer; }
@@ -25,32 +26,58 @@
     {{outlet}}
   </script>
   <script type="text/x-handlebars" data-template-name="runSessions">
-    <table class="table table-hover">
-      <caption>Runners List</caption>
-      <tr>
-        {{#each tableColumns}}
-          <th><a href="#" {{action "sortBy" attr}}>{{name}}{{#if isSorted}}<i {{bind-attr class="sortClass"}}></i>{{/if}}</a></th>
-        {{/each}}
-      </tr>
-      {{#each sortedRunSessions}}
-        <tr tabindex="0">
-            <td>{{id}}</td>
-            <td>{{start_time}}</td>
-            <td>{{end_time}}</td>
-            <td>{{duration}}</td>
-            <td>{{distance}}</td>
-            <td>{{sport_type_id}}</td>
-            <td>{{encoded_trace}}</td>
+    <section id="runners-list">
+      <nav>
+        <div class="col-md-6 caption">
+          <h3>Runners List</h3>
+        </div>
+        <div class="col-md-6 control">
+          <form>
+            <label>Sort by:
+              {{view Ember.Select classNames="form-control" content=tableColumns optionValuePath="content.attr" optionLabelPath="content.name" value=sort_by}}
+              {{view Ember.Select classNames="form-control" content=tableOrder   optionValuePath="content.attr" optionLabelPath="content.name" value=order}}
+            </label>
+          </form>
+        </div>
+      </nav>
+      <table class="table table-hover">
+        <tr>
+          {{#each tableColumns}}
+            <th><a href="#" {{action "clientSortBy" attr}}>{{name}}{{#if isSorted}}<i {{bind-attr class="sortClass"}}></i>{{/if}}</a></th>
+          {{/each}}
         </tr>
-      {{/each}}
-    </table>
-    <div class="text-center">
-      <ul class="pagination">
-        <li><a href="#">&laquo;</a></li>
-        <li><a href="#">&raquo;</a></li>
-        <li><p>Page 1/99589</p></li>
-      </ul>
-    </div>
+        {{#each sortedRunSessions}}
+          <tr tabindex="0">
+              <td>{{id}}</td>
+              <td>{{formatDate start_time}}</td>
+              <td>{{formatDate end_time}}</td>
+              <td>{{formateTime duration}}</td>
+              <td>{{formatDistance distance}}</td>
+              <td>{{sport_type_id}}</td>
+              <td>{{formatMapTrace encoded_trace}}</td>
+          </tr>
+        {{/each}}
+      </table>
+    </section>
+    <footer>
+      <div class="col-md-6">
+        <ul class="pagination">
+          {{#if prevPage}}
+            <li>{{#link-to (query-params page=prevPage sort_by=sort_by order=order)}}<i class="glyphicon glyphicon-chevron-left"></i>{{/link-to}}</li>
+          {{else}}
+            <li class="disabled"><a><i class="glyphicon glyphicon-chevron-left"></i></a></li>
+          {{/if}}
+          {{#if nextPage}}
+            <li>{{#link-to (query-params page=nextPage sort_by=sort_by order=order)}}<i class="glyphicon glyphicon-chevron-right"></i>{{/link-to}}</li>
+          {{else}}
+            <li class="disabled"><a><i class="glyphicon glyphicon-chevron-right"></i></a></li>
+          {{/if}}
+        </ul>
+      </div>
+      <div class="col-md-6">
+        <p class="pagination-info"><strong>Page {{pagination.page}} / {{pagination.available_pages}}</strong></p>
+      </div>
+    </footer>
   </script>
   <script type="text/x-handlebars" data-template-name="runSession">
     <table class="table">
@@ -74,11 +101,12 @@
     </table>
   </script>
   <script src="js/libs/jquery-1.10.2.js"></script>
-  <script src="js/libs/handlebars-1.1.2.js"></script>
-  <script src="js/libs/ember-1.6.1.js"></script>
+  <script src="js/libs/handlebars-v1.3.0.js"></script>
+  <script src="js/libs/ember-1.8.0-b1.js"></script>
   <script src="js/libs/ember-data-1.0.0-b8.js"></script>
   <script src="js/application.js"></script>
   <script src="js/models/runsession.js"></script>
   <script src="js/controllers/controller_runsessions.js"></script>
+  <script src="js/helpers/helpers.js"></script>
 </body>
 </html>

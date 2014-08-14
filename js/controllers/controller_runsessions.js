@@ -1,20 +1,39 @@
 ContestApp.RunSessionsController = Ember.ArrayController.extend({
+  queryParams: ["page", "sort_by", "order"],
   page: 1,
   sort_by: "start_time",
   order: "desc",
-  
+
   sortProperties: function () {
-    return [this.sort_by + ":" + this.order];
-  }.property("sort_by", "order"),
+    return [this.get("clientSort").sortBy + ":" + this.get("clientSort").order];
+  }.property("clientSort"),
   sortedRunSessions: Ember.computed.sort("model", "sortProperties"),
-  
-  actions: {
-    sortBy: function (sortProperty) {
-      this.set("sort_by", sortProperty);
-      this.set("order", (this.get("order") === "desc" ? "asc" : "desc"));
+  clientSort: { sortBy: "start_time", order: "desc" },
+
+  pagination: function () {
+    if (this.get("model.isLoaded")) {
+      var modelType = this.get("model.type");
+      return this.get("store").typeMapFor(modelType).metadata.pagination;
+    }
+  }.property("model.isLoaded"),
+  incPage: function (amount) {
+    var newPage = parseInt(this.get("pagination").page, 10) + amount;
+    if (newPage <= parseInt(this.get("pagination").available_pages, 10) && newPage >= 1) {
+      return newPage;
     }
   },
-  
+  prevPage: function () { return this.incPage(-1); }.property("pagination"),
+  nextPage: function () { return this.incPage(1); }.property("pagination"),
+
+  actions: {
+    clientSortBy: function (sortProperty, sortOrder) {
+      this.set("clientSort", {
+        sortBy: sortProperty,
+        order: sortOrder || (this.get("clientSort").order === "desc" ? "asc" : "desc")
+      });
+    }
+  },
+
   tableColumns: function () {
     var columns = [ Ember.Object.create({attr: "id", name: "#"}),
           Ember.Object.create({attr: "start_time", name: "Start Time"}),
@@ -25,11 +44,13 @@ ContestApp.RunSessionsController = Ember.ArrayController.extend({
           Ember.Object.create({attr: "encoded_trace", name: "Map Available"})];
     for (var len = columns.length, idx = 0; idx < len; idx++) {
       var column = columns[idx];
-      if (column.get("attr") === this.get("sort_by")) {
+      if (column.get("attr") === this.get("clientSort").sortBy) {
         column.set("isSorted", "true");
-        column.set("sortClass", "glyphicon glyphicon-chevron-" + (this.get("order") === "desc" ? "down" : "up"));
+        column.set("sortClass", "glyphicon glyphicon-chevron-" + (this.get("clientSort").order === "desc" ? "down" : "up"));
       }
     }
     return columns;
   }.property("sortProperties"),
+  tableOrder: [{attr: "desc", name: "Descending"}, {attr: "asc", name: "Ascending"}]
 });
+
