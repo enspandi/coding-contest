@@ -22,13 +22,13 @@ Ember.Handlebars.registerBoundHelper("formateTime", function (timeinms) {
   if (indays > 1) {
     return Math.round(indays * 10) / 10  + " days";
   }
-  else if (inhour > 1) {
+  if (inhour > 1) {
     return Math.round(inhour * 10) / 10  + " hours";
   }
-  else if (inmin > 1) {
+  if (inmin > 1) {
     return Math.round(inmin * 10) / 10 + " min";
   }
-  else if (insec > 1) {
+  if (insec > 1) {
     return Math.round(insec) + " sec";
   }
   return timeinms;

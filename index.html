@@ -9,60 +9,59 @@
     nav .caption h3 { margin: 5px 0; }
     nav .control { text-align: right; }
     nav .control select { display:inline-block; width: auto; }
-    footer .col-md-6 { text-align: right; }
-    footer .col-md-6 .pagination { margin: 0; }
-    footer .col-md-6 .pagination-info { line-height: 2em; }
-    table th, td { text-align: center; }
-    table tr:focus { background-color: #ccc; outline:0; }
-    table tr:hover { cursor:pointer; }
-    table a { display: block; padding: 8px;}
+    footer .col-sm-6 { text-align: right; }
+    footer .col-sm-6 .pagination { margin: 0; }
+    footer .col-sm-6 .pagination-info { line-height: 2em; }
+    table.table tr th,
+    table.table tr td { text-align: center; padding:0; }
+    table a { display: block; padding: 8px; }
     table a i { padding: 0 0 0 5px; font-size:0.8em; }
+    table td a { color: black;  }
     .map-canvas { margin:0 auto; border:4px solid #eee;}
   </style>
 </head>
 <body>
+  <header>
+    <h1>Web-Frontend Coding Contest</h1>
+  </header>
   <script type="text/x-handlebars" data-template-name="application">
-    <header>
-      <h1>Web-Frontend Coding Contest</h1>
-    </header>
     {{outlet}}
   </script>
   <script type="text/x-handlebars" data-template-name="runSessions">
     <section id="runners-list">
       <nav>
-        <div class="col-md-6 caption">
+        <div class="col-sm-6 caption">
           <h3>Runners List</h3>
         </div>
-        <div class="col-md-6 control">
+        <div class="col-sm-6 control">
           <form>
-            <label>Sort by:
+            <label>Sort by:</label>
               {{view Ember.Select classNames="form-control" content=tableColumns optionValuePath="content.attr" optionLabelPath="content.name" value=sort_by}}
               {{view Ember.Select classNames="form-control" content=tableOrder   optionValuePath="content.attr" optionLabelPath="content.name" value=order}}
-            </label>
           </form>
         </div>
       </nav>
       <table class="table table-hover">
         <tr>
-          {{#each tableColumns}}
-            <th><a href="#" {{action "clientSortBy" attr}}>{{name}}{{#if isSorted}}<i {{bind-attr class="sortClass"}}></i>{{/if}}</a></th>
+          {{#each tableColumnsSorted}}
+            <th><a href="#" title="Click to sort" {{action "clientSortBy" attr}}>{{name}}{{#if isSorted}}<i {{bind-attr class="sortClass"}}></i>{{/if}}</a></th>
           {{/each}}
         </tr>
         {{#each sortedRunSessions}}
-          <tr tabindex="0" {{action 'showRunDetails' this}}>
-              <td>{{id}}</td>
-              <td>{{formatDate start_time}}</td>
-              <td>{{formatDate end_time}}</td>
-              <td>{{formateTime duration}}</td>
-              <td>{{formatDistance distance}}</td>
-              <td>{{sport_type_id}}</td>
-              <td>{{formatMapTrace encoded_trace}}</td>
+          <tr tabindex="0" title="Click to view in detail">
+            <td>{{#link-to 'runSession' this}}{{id}}{{/link-to}}</td>
+            <td>{{#link-to 'runSession' this}}{{formatDate start_time}}{{/link-to}}</td>
+            <td>{{#link-to 'runSession' this}}{{formatDate end_time}}{{/link-to}}</td>
+            <td>{{#link-to 'runSession' this}}{{formateTime duration}}{{/link-to}}</td>
+            <td>{{#link-to 'runSession' this}}{{formatDistance distance}}{{/link-to}}</td>
+            <td>{{#link-to 'runSession' this}}{{sport_type_id}}{{/link-to}}</td>
+            <td>{{#link-to 'runSession' this}}{{formatMapTrace encoded_trace}}{{/link-to}}</td>
           </tr>
         {{/each}}
       </table>
     </section>
     <footer>
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <ul class="pagination">
           {{#if prevPage}}
             <li>{{#link-to (query-params page=prevPage sort_by=sort_by order=order)}}<i class="glyphicon glyphicon-chevron-left"></i>{{/link-to}}</li>
@@ -76,7 +75,7 @@
           {{/if}}
         </ul>
       </div>
-      <div class="col-md-6">
+      <div class="col-sm-6">
         <p class="pagination-info"><strong>Page {{pagination.page}} / {{pagination.available_pages}}</strong></p>
       </div>
     </footer>
@@ -89,12 +88,12 @@
     </nav>
     <table class="table">
       <tr>
-        <th><a href="#">#</a></th>
-        <th><a href="#">Start Time</a></th>
-        <th><a href="#">End Time</a></th>
-        <th><a href="#">Duration</a></th>
-        <th><a href="#">Distance</a></th>
-        <th><a href="#">Sport Type Id</a></th>
+        <th><a>#</a></th>
+        <th><a>Start Time</a></th>
+        <th><a>End Time</a></th>
+        <th><a>Duration</a></th>
+        <th><a>Distance</a></th>
+        <th><a>Sport Type Id</a></th>
       </tr>
       <tr tabindex="0">
         <td>{{id}}</td>

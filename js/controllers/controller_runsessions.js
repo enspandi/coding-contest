@@ -31,25 +31,29 @@ ContestApp.RunSessionsController = Ember.ArrayController.extend({
         sortBy: sortProperty,
         order: sortOrder || (this.get("clientSort").order === "desc" ? "asc" : "desc")
       });
-    },
-    showRunDetails: function (run) {
-      this.transitionToRoute('runSession', run);
     }
   },
 
   tableColumns: function () {
-    var columns = [ Ember.Object.create({attr: "id", name: "#"}),
+    return [ Ember.Object.create({attr: "id", name: "#"}),
           Ember.Object.create({attr: "start_time", name: "Start Time"}),
           Ember.Object.create({attr: "end_time", name: "End Time"}),
           Ember.Object.create({attr: "duration", name: "Duration"}),
           Ember.Object.create({attr: "distance", name: "Distance"}),
           Ember.Object.create({attr: "sport_type_id", name: "Sport Type Id"}),
           Ember.Object.create({attr: "encoded_trace", name: "Map Available"})];
-    for (var len = columns.length, idx = 0; idx < len; idx++) {
-      var column = columns[idx];
+  }.property(),
+  tableColumnsSorted: function () {
+    var columns = this.get("tableColumns"),
+        column, len, idx;
+    for (len = columns.length, idx = 0; idx < len; idx++) {
+      column = columns[idx];
       if (column.get("attr") === this.get("clientSort").sortBy) {
-        column.set("isSorted", "true");
+        column.set("isSorted", true);
         column.set("sortClass", "glyphicon glyphicon-chevron-" + (this.get("clientSort").order === "desc" ? "down" : "up"));
+      }
+      else {
+        column.set("isSorted", false);
       }
     }
     return columns;
